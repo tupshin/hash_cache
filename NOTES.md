@@ -1,4 +1,4 @@
-```cargo new --lib kv_store```
+```cargo new --lib hash_cache```
 The following is all from prior to writing any code
 
 Assess requirements:

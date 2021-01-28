@@ -24,3 +24,4 @@ To run the tests, use ```cargo test```
 To run the performance benchmarks, use cargo to install criterion
 ```cargo intall cargo-criterion```
 and then run ```cargo criterion```
+documentation can be access with ```cargo doc --open```
