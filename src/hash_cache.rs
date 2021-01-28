@@ -1,13 +1,13 @@
 use crate::api::{KVError, KVStore};
 use std::collections::HashMap;
+use std::fmt::Debug;
 use std::hash::Hash;
+use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use std::time::SystemTime;
-use std::fmt::Debug;
-use std::sync::{Mutex, Arc};
 
 ///This is a simple wrapper around HashMap<K,V> that adds thread safety and optional expiration
-#[derive(Default,Debug,Clone)]
+#[derive(Default, Debug, Clone)]
 pub struct HashCache<K, V> {
     pub cache: Arc<Mutex<HashMap<K, (Option<SystemTime>, V)>>>,
 }
@@ -17,7 +17,11 @@ impl<K: Clone + Eq + Hash + Debug, V: Clone + Debug> KVStore<K, V> for HashCache
     ///Gets a lock on the underlying HashMap and inserts a value into it
     fn put(&mut self, k: K, v: V, expiration: Option<Duration>) -> Result<(), KVError> {
         match expiration {
-            Some(exp) => self.cache.lock().unwrap().insert(k, (Some(SystemTime::now() + exp), v)),
+            Some(exp) => self
+                .cache
+                .lock()
+                .unwrap()
+                .insert(k, (Some(SystemTime::now() + exp), v)),
             None => self.cache.lock().unwrap().insert(k, (None, v)),
         };
         Ok(())
@@ -38,7 +42,7 @@ impl<K: Clone + Eq + Hash + Debug, V: Clone + Debug> KVStore<K, V> for HashCache
                     None => {
                         //No expiration time, so key always valid
                         Some(v.clone())
-                    },
+                    }
                     Some(t) => {
                         if t > &SystemTime::now() {
                             //key still valid

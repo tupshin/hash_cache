@@ -85,8 +85,14 @@ mod tests {
         thread_one.join().unwrap();
 
         let thread_two = thread::spawn(move || {
-            assert_eq!(cache2.lock().unwrap().get(&75).unwrap().1, format!("v:{}", 75));
-            assert_eq!(cache2.lock().unwrap().get(&352).unwrap().1, format!("v:{}", 352));
+            assert_eq!(
+                cache2.lock().unwrap().get(&75).unwrap().1,
+                format!("v:{}", 75)
+            );
+            assert_eq!(
+                cache2.lock().unwrap().get(&352).unwrap().1,
+                format!("v:{}", 352)
+            );
         });
         thread_two.join().unwrap();
     }
@@ -106,8 +112,14 @@ mod tests {
         thread_one.join().unwrap();
 
         let thread_two = thread::spawn(move || {
-            assert_eq!(cache2.lock().unwrap().get(&75).unwrap().1, format!("v:{}", 75));
-            assert_eq!(cache2.lock().unwrap().get(&352).unwrap().1, format!("v:{}", 352));
+            assert_eq!(
+                cache2.lock().unwrap().get(&75).unwrap().1,
+                format!("v:{}", 75)
+            );
+            assert_eq!(
+                cache2.lock().unwrap().get(&352).unwrap().1,
+                format!("v:{}", 352)
+            );
         });
         thread_two.join().unwrap();
     }

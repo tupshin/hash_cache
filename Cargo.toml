@@ -1,5 +1,5 @@
 [package]
-name = "kv_store"
+name = "hash_cache"
 version = "0.1.0"
 authors = ["Tupshin Harper <tupshin@tupshin.com>"]
 edition = "2018"
