@@ -1,4 +1,5 @@
 ```cargo new --lib kv_store```
+The following is all from prior to writing any code
 
 Assess requirements:
 

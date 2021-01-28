@@ -7,17 +7,14 @@ mod tests {
     use std::thread;
     use std::time::Duration;
 
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-
+    ///tests that a key can be inserted. does not verify that it can be retrieved
     #[test]
     fn test_put() {
         let mut cache = HashCache::default();
         cache.put("a", "b", None).unwrap();
     }
 
+    ///tests taht a key can be inserted and retrieved
     #[test]
     fn test_get() {
         let mut cache = HashCache::default();
@@ -26,6 +23,7 @@ mod tests {
         assert_eq!(result, "b");
     }
 
+    ///tests that a key can be deleted and that it is no longer retrievable after being deleted
     #[test]
     fn test_delete() {
         let mut cache = HashCache::default();
@@ -37,11 +35,10 @@ mod tests {
         assert_eq!(deleted_val, None)
     }
 
+    ///Tests using the optional expiration field to flag a
     #[test]
     fn test_expiring_put() {
         let mut cache1 = HashCache::default();
-        //This clones the internal Arc
-        //let mut cache2 = cache1.clone();
         let duration = Duration::new(1, 0);
         cache1.put("a", "b", Some(duration)).unwrap();
 
@@ -50,6 +47,7 @@ mod tests {
         assert_eq!(None, cache1.get("a"));
     }
 
+    ///tests that the cache can be accessed from multiple threads
     #[test]
     fn multi_threaded_put_get() {
         let cache = HashCache::default().cache;
@@ -72,6 +70,7 @@ mod tests {
         });
     }
 
+    ///loads 1000 records from one thread and then tests the retrieval of two of them from a different thread
     #[test]
     fn bulk_put_get() {
         let cache = HashCache::default().cache;
@@ -92,6 +91,7 @@ mod tests {
         thread_two.join().unwrap();
     }
 
+    ///loads 10,000,000 records and makes sure that a couple of them are readable
     #[test]
     fn ten_million_load() {
         let cache = HashCache::default().cache;

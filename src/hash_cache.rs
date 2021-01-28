@@ -6,15 +6,15 @@ use std::time::SystemTime;
 use std::fmt::Debug;
 use std::sync::{Mutex, Arc};
 
+///This is a simple wrapper around HashMap<K,V> that adds thread safety and optional expiration
 #[derive(Default,Debug,Clone)]
 pub struct HashCache<K, V> {
     pub cache: Arc<Mutex<HashMap<K, (Option<SystemTime>, V)>>>,
 }
 
-unsafe impl<K,V> Send for HashCache<K,V> {}
-unsafe impl<K,V> Sync for HashCache<K,V> {}
-
+//Implements that trait defined in api.rs
 impl<K: Clone + Eq + Hash + Debug, V: Clone + Debug> KVStore<K, V> for HashCache<K, V> {
+    ///Gets a lock on the underlying HashMap and inserts a value into it
     fn put(&mut self, k: K, v: V, expiration: Option<Duration>) -> Result<(), KVError> {
         match expiration {
             Some(exp) => self.cache.lock().unwrap().insert(k, (Some(SystemTime::now() + exp), v)),
@@ -23,6 +23,9 @@ impl<K: Clone + Eq + Hash + Debug, V: Clone + Debug> KVStore<K, V> for HashCache
         Ok(())
     }
 
+    ///Gets a lock on the underlying HashMap and retrieves a value from it
+    ///In this cache implementation, expired records are deleted at read time,
+    /// hence the relative complexity of this implementation
     fn get(&mut self, k: K) -> Option<V> {
         let mut cache = self.cache.lock().unwrap();
         match cache.get(&k) {
@@ -51,6 +54,7 @@ impl<K: Clone + Eq + Hash + Debug, V: Clone + Debug> KVStore<K, V> for HashCache
         }
     }
 
+    ///gets a lock on the underlying HashMap and deletes the specified entry
     fn delete(&mut self, k: K) -> Result<(), KVError> {
         self.cache.lock().unwrap().remove(&k);
         Ok(())

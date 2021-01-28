@@ -12,8 +12,10 @@ pub trait KVStore<K: Clone + Eq + Hash, V: Clone> {
     ///Note that get must check for expired data and delete K/V pairs that have expired
     fn get(&mut self, k: K) -> Option<V>;
 
+    ///deletes a k/v from the cache
     fn delete(&mut self, k: K) -> Result<(), KVError>;
 }
 
+///A stub of an Error
 #[derive(Debug)]
 pub enum KVError {}

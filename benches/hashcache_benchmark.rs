@@ -5,6 +5,8 @@ use criterion::{criterion_group, criterion_main, Criterion};
 use rand::Rng;
 use std::time::{SystemTime, Duration};
 
+
+///inserts 10 million records and makes sure that we can retrieve one
 fn insert_benchmark(c: &mut Criterion) {
     let mut cache = HashCache::default();
     bulk_insert(&mut cache,10_000_000);
@@ -22,7 +24,7 @@ fn insert_expiring_benchmark(c: &mut Criterion) {
 
 fn read_one(cache: &mut HashCache<String,String>, num: usize) {
             let val = cache.get( format!("k:{}",num));
-            //assert_eq!(val, Some(format!("v:{}",num)));
+            assert_eq!(val, Some(format!("v:{}",num)));
 }
 
 fn read_expiring_one(cache: &mut HashCache<String,String>, num: usize) {
